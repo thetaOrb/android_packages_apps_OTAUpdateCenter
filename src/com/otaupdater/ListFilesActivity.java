@@ -45,6 +45,8 @@ public class ListFilesActivity extends ListActivity implements AdapterView.OnIte
 
     public static final int DL_PATH_LEN = Config.DL_PATH.length();
 
+    private static final String SCRIPT_FILE_PATH = "/cache/recovery/openrecoveryscript";
+
     private void listFiles(File dir) {
         fileList.clear();
         pathList.clear();
@@ -265,13 +267,14 @@ public class ListFilesActivity extends ListActivity implements AdapterView.OnIte
                                     os.writeBytes("echo 'install_zip(\"/" + Utils.getRcvrySdPath() + "/OTA-Updater/download/" + name + "\");' >> /cache/recovery/extendedcommand\n");
                                 } else {
                                     if (selectedOpts[0]) {
-                                        os.writeBytes("echo '--wipe_data' >> /cache/recovery/command\n");
+                                        os.writeBytes("echo 'wipe data' >> " + SCRIPT_FILE_PATH + "\n");
                                     }
                                     if (selectedOpts[1]) {
-                                        os.writeBytes("echo '--wipe_cache' >> /cache/recovery/command\n");
+                                        os.writeBytes("echo 'wipe cache' >> " + SCRIPT_FILE_PATH + "\n");
+                                        os.writeBytes("echo 'wipe dalvik' >> " + SCRIPT_FILE_PATH + "\n");
                                     }
 
-                                    os.writeBytes("echo '--update_package=/" + Utils.getRcvrySdPath() + "/OTA-Updater/download/" + name + "' >> /cache/recovery/command\n");
+                                    os.writeBytes("echo 'install /" + Utils.getRcvrySdPath() + "/OTA-Updater/download/" + name + "' >> " + SCRIPT_FILE_PATH + "\n");
                                 }
 
                                 os.writeBytes("sync\n");
